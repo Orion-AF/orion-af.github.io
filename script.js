@@ -196,9 +196,9 @@ document.addEventListener("DOMContentLoaded", () => {
     updateOrionAlpha();
 
     // ---- Área lógica cuadrada centrada
-    let logicalSize = Math.min(canvas.width, canvas.height);
+    let logicalSize = canvas.width * 0.6; // 80% del ancho
     if (canvas.width < 768) {
-      logicalSize = canvas.height * 0.75; // más grande en móvil
+      logicalSize = canvas.width * 1.3; // casi todo el ancho en móvil
     }
     const offsetXCanvas = (canvas.width - logicalSize) / 2;
     const offsetYCanvas = (canvas.height - logicalSize) / 2;
