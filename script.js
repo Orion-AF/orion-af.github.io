@@ -51,7 +51,7 @@ if (modal && modalImg) {
 }
 
 // =====================
-// Cielo estrellado + Constelación de Orión (scroll-in / scroll-out retardado)
+// Cielo estrellado + Constelación de Orión
 // =====================
 document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("stars");
@@ -64,8 +64,24 @@ document.addEventListener("DOMContentLoaded", () => {
     canvas.width  = window.innerWidth;
     canvas.height = window.innerHeight;
   }
+
+  // ---- Variables fijas para constelación
+  let logicalSize, offsetXCanvas, offsetYCanvas;
+  function recalcConstellationSize() {
+    logicalSize = canvas.width * 0.6;  // desktop
+    if (canvas.width < 768) {
+      logicalSize = canvas.width * 1.3; // móvil
+    }
+    offsetXCanvas = (canvas.width - logicalSize) / 2;
+    offsetYCanvas = (canvas.height - logicalSize) / 2;
+  }
+
   resizeCanvas();
-  window.addEventListener("resize", resizeCanvas);
+  recalcConstellationSize();
+  window.addEventListener("resize", () => {
+    resizeCanvas();
+    recalcConstellationSize();
+  });
 
   // ---- Estrellas de fondo
   const totalStars = 220;
@@ -76,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
     s: Math.random() * 0.5 + 0.2
   }));
 
-  // ---- Dataset de líneas de Orión (coords normalizados de tu dataset)
+  // ---- Dataset de líneas de Orión
   const baseW = 1500, baseH = 1500;
   const scaleX = 0.7;
   const scaleY = 0.85;
@@ -118,9 +134,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const [x,y] = str.split(",").map(Number);
     return {x,y,r:3};
   });
+
   const toggle = document.querySelector(".menu-toggle");
   const menu = document.querySelector(".nav-menu");
-
   if (toggle && menu) {
     toggle.addEventListener("click", () => {
       menu.classList.toggle("show");
@@ -144,31 +160,34 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ---- Fade con retardo SOLO para la constelación
-  function getFadeProgress(scrollY, fadeStart, fadeEnd) {
-    const progress = scrollY / fadeEnd;
-    if (progress < fadeStart) return 1; // visible fijo
-    if (progress > 1) return 0;         // ya desapareció
-    return 1 - (progress - fadeStart) / (1 - fadeStart);
-  }
-
   let orionAlpha = 0;
   function updateOrionAlpha() {
     const wrapper = document.querySelector(".hero-wrapper");
     const rect = wrapper.getBoundingClientRect();
 
-    // progreso de scroll dentro del wrapper (0 al inicio, 1 al final)
     const progress = Math.min(1, Math.max(0, (0 - rect.top) / (rect.height - window.innerHeight)));
 
-    // ---- Texto: desaparece apenas empieza el scroll
+    // Texto desaparece apenas empieza el scroll
     const textFade = Math.max(0, 1 - progress * 4); 
     if (heroContent) heroContent.style.opacity = textFade.toFixed(3);
 
-    // ---- Constelación: visible hasta 30%, luego se desvanece
-    const fadeStart = 0.15;
-    let fadeVal = 1;
-    if (progress > fadeStart) {
-      fadeVal = 1 - ((progress - fadeStart) / (1 - fadeStart)) * 1.5; 
+    // Aparición y desaparición de constelación
+    const fadeInStart = 0.05;
+    const fadeInEnd   = 0.15;
+    const fadeOutStart = 0.4;
+    const fadeOutEnd   = 0.8;
+
+    let fadeVal = 0;
+    if (progress >= fadeInStart && progress <= fadeInEnd) {
+      fadeVal = (progress - fadeInStart) / (fadeInEnd - fadeInStart);
     }
+    if (progress > fadeInEnd && progress < fadeOutStart) {
+      fadeVal = 1;
+    }
+    if (progress >= fadeOutStart && progress <= fadeOutEnd) {
+      fadeVal = 1 - (progress - fadeOutStart) / (fadeOutEnd - fadeOutStart);
+    }
+    fadeVal = Math.max(0, Math.min(1, fadeVal));
 
     orionAlpha += (fadeVal - orionAlpha) * 0.08;
   }
@@ -195,20 +214,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // Actualiza alpha según scroll
     updateOrionAlpha();
 
-    // ---- Área lógica cuadrada centrada
-    let logicalSize = canvas.width * 0.6; // 80% del ancho
-    if (canvas.width < 768) {
-      logicalSize = canvas.width * 1.3; // casi todo el ancho en móvil
-    }
-    const offsetXCanvas = (canvas.width - logicalSize) / 2;
-    const offsetYCanvas = (canvas.height - logicalSize) / 2;
-
-    // Dibuja la constelación proporcionada
+    // Dibuja la constelación
     if (orionAlpha > 0.01) {
       ctx.save();
       ctx.globalAlpha = orionAlpha;
 
-      // líneas
       ctx.strokeStyle = "rgba(255,255,255,0.9)";
       ctx.lineWidth = 1.2;
       orionLines.forEach(([A,B]) => {
@@ -218,7 +228,6 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.stroke();
       });
 
-      // estrellas
       for (let p of orionStars) {
         glowStar(
           p.x * logicalSize + offsetXCanvas,
@@ -233,20 +242,17 @@ document.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(animate);
   }
   animate();
+
+  // ---- Header hide/show con scroll
   let lastScroll = 0;
   const header = document.querySelector("header");
-
   window.addEventListener("scroll", () => {
     const currentScroll = window.pageYOffset;
-
     if (currentScroll > lastScroll && currentScroll > 80) {
-      // Scroll hacia abajo y pasamos un poco (80px de margen)
       header.classList.add("hide");
     } else {
-      // Scroll hacia arriba
       header.classList.remove("hide");
     }
-
     lastScroll = currentScroll;
   });
 });
