@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>orionAF - Software a la medida</title>
+  <title>Orion AF - Software a la medida</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="img/logo_no_letter.png">
@@ -16,24 +16,41 @@
   <!-- Header -->
   <header>
     <div class="container nav-container">
+      <!-- Logo a la izquierda -->
       <img src="img/logo.png" alt="Logo OrionAF" class="logo">
-      <nav>
+
+      <!-- Menú normal (desktop) -->
+      <nav class="nav-menu">
         <a href="#servicios">Servicios</a>
         <a href="#clientes">Clientes</a>
         <a href="#proyectos">Proyectos</a>
-        <a href="#contacto" class="btn-nav">Contacto</a>
+        <a href="#contacto" class="btn-nav">Contáctanos</a>
       </nav>
+
+      <!-- Acciones (móvil: hamburger + botón) -->
+      <div class="nav-actions">
+        <button class="menu-toggle" aria-label="Abrir menú">
+          <i class="fas fa-bars"></i>
+        </button>
+        <a href="#contacto" class="btn-nav mobile-only">Contáctanos</a>
+      </div>
     </div>
   </header>
 
+
+
+
+
   <!-- Hero -->
-  <section class="hero">
-  <canvas id="stars"></canvas>
-  <div class="hero-content">
-    <h1>orionAF</h1>
-    <p>Software a la medida, con la elegancia del cosmos.</p>
+  <div class="hero-wrapper">
+    <section class="hero">
+      <canvas id="stars"></canvas>
+      <div class="hero-content">
+        <h1>Orion AF</h1>
+        <p>Software a la medida, con la elegancia del cosmos.</p>
+      </div>
+    </section>
   </div>
-</section>
 
 
   <!-- Servicios -->
@@ -64,7 +81,7 @@
   </section>
 
   <!-- Clientes -->
-  <section id="clientes" class="section bg-light">
+  <section id="clientes" class="section">
     <h2>Clientes</h2>
     <div class="grid">
       <div class="card">
@@ -124,15 +141,17 @@
     <h2>Contacto</h2>
     <p>Ponte en contacto con nosotros para hablar sobre tu próximo proyecto:</p>
     <ul style="list-style:none; margin-top:1rem;">
-      <li><i class="fas fa-envelope"></i> <strong>Email:</strong> contacto@orionaf.com</li>
-      <li><i class="fas fa-phone"></i> <strong>Tel:</strong> +52 33-3662-7736</li>
+      <li><i class="fas fa-envelope"></i> <strong>Email:</strong> adrian.llanos.jimenez@gmail.com</li>
+      <li><i class="fas fa-phone"></i> <strong>Tel:</strong> 3320718236</li>
+      <li><i class="fas fa-envelope"></i> <strong>Email:</strong> ferjimenez2603@gmail.com</li>
+      <li><i class="fas fa-phone"></i> <strong>Tel:</strong> 3336627736</li>
     </ul>
   </section>
 
   <!-- Footer -->
   <footer>
     <div class="footer-container">
-      <p>© 2025 orionAF - Software a la medida</p>
+      <p>© 2025 Orion AF - Software a la medida</p>
       <nav>
         <a href="#servicios">Servicios</a>
         <a href="#clientes">Clientes</a>
